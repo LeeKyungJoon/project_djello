@@ -10,6 +10,13 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ----------------------------------------
+// Static Files
+// ----------------------------------------
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.resolve(__dirname, "../client/build")));
+}
+
+// ----------------------------------------
 // Logging
 // ----------------------------------------
 const morgan = require("morgan");
@@ -86,6 +93,9 @@ const sessions = require("./routes/sessions");
 const djelloApi = require("./routes/api");
 app.use("/sessions", sessions);
 app.use("/api/v1", djelloApi);
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 
 // ----------------------------------------
 // Server
